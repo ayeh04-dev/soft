@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobalPulse Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+:root{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --text:#fff;
+}
+
+.light{
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --text:#000;
+}
+
+body{
+    margin:0;
+    font-family:Poppins;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* NAVBAR */
+.navbar{
+    position:sticky;
+    top:0;
+    display:flex;
+    justify-content:space-between;
+    padding:15px 30px;
+    background:#020617;
+    z-index:1000;
+}
+
+.search{
+    padding:8px;
+    border-radius:6px;
+    border:none;
+}
+
+.toggle{
+    cursor:pointer;
+    padding:8px 12px;
+    background:#38bdf8;
+    border-radius:6px;
+}
+
+/* CATEGORIES */
+.categories{
+    display:flex;
+    gap:15px;
+    padding:15px;
+    overflow-x:auto;
+}
+
+.categories span{
+    background:#334155;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* BREAKING */
+.ticker{
+    background:#ef4444;
+    padding:10px;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.ticker span{
+    display:inline-block;
+    animation:scroll 10s linear infinite;
+}
+
+@keyframes scroll{
+    from{transform:translateX(100%)}
+    to{transform:translateX(-100%)}
+}
+
+/* LAYOUT */
+.container{
+    display:grid;
+    grid-template-columns:3fr 1fr;
+    gap:20px;
+    padding:20px;
+}
+
+/* NEWS GRID */
+.news-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:var(--card);
+    border-radius:12px;
+    overflow:hidden;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:15px;
+}
+
+.tag{
+    font-size:12px;
+    color:#38bdf8;
+}
+
+.ai{
+    font-size:12px;
+    color:#94a3b8;
+}
+
+/* SIDEBAR */
+.sidebar{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.trending{
+    background:var(--card);
+    padding:15px;
+    border-radius:10px;
+}
+
+.newsletter{
+    background:#38bdf8;
+    padding:20px;
+    border-radius:10px;
+    color:black;
+}
+
+/* SKELETON */
+.skeleton{
+    height:250px;
+    background:linear-gradient(90deg,#1e293b,#334155,#1e293b);
+    animation:loading 1.5s infinite;
+}
+
+@keyframes loading{
+    0%{background-position:-200px}
+    100%{background-position:200px}
+}
+
+/* MOBILE */
+@media(max-width:900px){
+    .container{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div class="navbar">
+    <h2>🌍 GlobalPulse</h2>
+
+    <input type="text" class="search" placeholder="Search news...">
+
+    <div class="toggle" onclick="toggleTheme()">🌙</div>
+</div>
+
+<!-- CATEGORIES -->
+<div class b="toggle" onclick="top">
+    <span><button>ALL</span>
+    <span>Politics</span>
+    <span>Technology</span>
+    <span>Sports</span>
+    <span>Business</span></button>
+</div>
+
+<!-- BREAKING -->
+<div class="ticker">
+    <span>🚨 Breaking: AI disruption | Global markets | Climate updates | Tech boom| live</span>
+</div>
+
+
+<div class="container">
+
+    
+    <div class="news-grid" id="news">
+
+    
+        <div class ="skeleton" ></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+
+    </div>
+
+
+    <div class="sidebar">
+
+        <div class="trending">
+            <h3>🔥 Trending</h3>
+            <p>AI revolution</p>
+            <p>Crypto surge</p>
+            <p>Global economy</p>
+        </div>
+
+        <div class="newsletter">
+            <h3>📩 Newsletter</h3>
+            <input id="Email" placeholder="Email" style="width:100%;padding:8px;margin:10px 0">
+            <button putin style="width:100%;padding:10px;background:black;color:white;border:none;">
+                Subscribe
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const API = "http://localhost:5000";
+
+/* LOAD NEWS */
+async function loadNews(){
+    const res = await fetch(`${API}/api/news`);
+    const data = await res.json();
+
+    const container = document.getElementById("news");
+    container.innerHTML = "";
+
+    data.forEach(n => {
+        container.innerHTML += `
+            <div class="card">
+                <img src="${n.image || 'https://via.placeholder.com/400'}">
+                <div class="card-content">
+                    <div class="tag">Tech</div>
+                    <h3>${n.title}</h3>
+                    <p class="ai">${n.summary}</p>
+                </div>
+            </div>
+        `;
+    });
+}
+
+loadNews();
+
+/* DARK MODE */
+function toggleTheme(){
+    document.body.classList.toggle("light");
+}
+
+</script>
+
+</body>
+</html>
